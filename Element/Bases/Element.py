@@ -64,5 +64,33 @@ class Element(Tag, Target, Node):
         ...
 
     @attribute
-    def hidden(self, *, boolean: bool = True):
+    def dir(self):
+        ...
+
+    @attribute
+    def draggable(self, *, boolean : bool = True):
+        ...
+
+    @attribute
+    def hidden(self, *, boolean : bool = True):
+        ...
+
+    @attribute
+    def lang(self):
+        ...
+
+    @attribute
+    def spellcheck(self, *, boolean : bool = True):
+        ...
+
+    @attribute
+    def tabindex(self):
+        ...
+
+    @attribute
+    def title(self):
+        ...
+
+    @attribute
+    def translate(self):
         ...
