@@ -1,68 +1,51 @@
-# --------------------------------------------------------------------------------------------------
-# ------------------------- Element | Bases | The Abstract Base Node Class -------------------------
-# --------------------------------------------------------------------------------------------------
-"""This module contains the abstract base Node class, a base of the Element class.
-
-"""
-
 from typing import TYPE_CHECKING
 from typing import Optional
 from typing import Union
 
 if TYPE_CHECKING:
-    from positron.Controllers.Document.Document import Document
-    from positron.Controllers.Template.Template import Template
     from positron.Element.Bases.Element import Element
 
 class Node(object):
 
-    def __init__(self,
-            document: Union['Document', 'Template'],
-            tagname : str = 'element',
-            xmlns   : str = 'www.positron.org/xmlns/element',
-        ):
-
-        self.document = document
-        self.tagname  = tagname
-        self.xmlns    = xmlns
+    def __init__(self: 'Element'):
 
         self.parent   : Optional['Element'] = None
         self.children : list['Element']     = []
 
-    def removeChild(self, target: 'Element'):
+    def removeChild(self: 'Element', target: 'Element'):
         self.children.remove(target)
 
-    def removeChildren(self, *targets: 'Element'):
+    def removeChildren(self: 'Element', *targets: 'Element'):
         tuple(map(self.children.remove, targets))
 
-    def prependChild(self, target: 'Element'):
+    def prependChild(self: 'Element', target: 'Element'):
         self.children[:0] = [target]
 
-    def prependChildren(self, *targets: 'Element'):
+    def prependChildren(self: 'Element', *targets: 'Element'):
         self.children[:0] = targets
 
-    def insertChildBefore(self, reference: 'Element', target: 'Element'):
+    def insertChildBefore(self: 'Element', reference: 'Element', target: 'Element'):
         self.children[(index := self.children.index(reference)): index] = [target]
 
-    def insertChildrenBefore(self, reference: 'Element', *targets: 'Element'):
+    def insertChildrenBefore(self: 'Element', reference: 'Element', *targets: 'Element'):
         self.children[(index := self.children.index(reference)): index] = targets
 
-    def insertChildAt(self, index: int, target: 'Element'):
+    def insertChildAt(self: 'Element', index: int, target: 'Element'):
         self.children[index: index] = [target]
 
-    def insertChildrenAt(self, index: int, *targets: 'Element'):
+    def insertChildrenAt(self: 'Element', index: int, *targets: 'Element'):
         self.children[index: index] = targets
 
-    def insertChildAfter(self, reference: 'Element', target: 'Element'):
+    def insertChildAfter(self: 'Element', reference: 'Element', target: 'Element'):
         self.children[(index := self.children.index(reference) + 1): index] = [target]
 
-    def insertChildrenAfter(self, reference: 'Element', *targets: 'Element'):
+    def insertChildrenAfter(self: 'Element', reference: 'Element', *targets: 'Element'):
         self.children[(index := self.children.index(reference) + 1): index] = targets
 
-    def appendChild(self, target: 'Element'):
+    def appendChild(self: 'Element', target: 'Element'):
         self.children[len(self.children):] = [target]
 
-    def appendChildren(self, *targets: 'Element'):
+    def appendChildren(self: 'Element', *targets: 'Element'):
         self.children[len(self.children):] = targets
 
     def cloneNode(self: 'Element') -> 'Element':
@@ -74,38 +57,38 @@ class Node(object):
 
         return clone
 
-    def isAncestorOf(self, target: 'Element') -> bool:
+    def isAncestorOf(self: 'Element', target: 'Element') -> bool:
 
         while target is not None and target is not self:
             target = target.parent
 
         return target is self
 
-    def isParentOf(self, target: 'Element') -> bool:
+    def isParentOf(self: 'Element', target: 'Element') -> bool:
         return target in self.children
 
-    def isChildOf(self, target: 'Element') -> bool:
+    def isChildOf(self: 'Element', target: 'Element') -> bool:
         return self in target.children
 
-    def isDescendantOf(self, target: 'Element') -> bool:
+    def isDescendantOf(self: 'Element', target: 'Element') -> bool:
         return target.isAncestorOf(self)
 
     @property
-    def root(self):
+    def root(self: 'Element'):
         return self.document.root
 
     @property
-    def isConnected(self) -> bool:
+    def isConnected(self: 'Element') -> bool:
         """Return a boolean indicating if this element is connected to it's document"""
         return self.isDescendantOf(self.root)
 
     @property
-    def siblingIndex(self) -> Optional[int]:
+    def siblingIndex(self: 'Element') -> Optional[int]:
 
         return self.parent.children.index(self) if self.parent else None
 
     @property
-    def firstSibling(self) -> Optional['Element']:
+    def firstSibling(self: 'Element') -> Optional['Element']:
 
         if not self.parent or (sibling := self.parent.firstChild) is self:
             return None
@@ -113,7 +96,7 @@ class Node(object):
         return sibling
 
     @property
-    def previousSibling(self) -> Optional['Element']:
+    def previousSibling(self: 'Element') -> Optional['Element']:
 
         if not self.parent or self.parent.firstChild is self:
             return None
@@ -121,7 +104,7 @@ class Node(object):
         return self.parent.children[self.siblingIndex - 1]
 
     @property
-    def nextSibling(self) -> Optional['Element']:
+    def nextSibling(self: 'Element') -> Optional['Element']:
 
         if not self.parent or self.parent.lastChild is self:
             return None
@@ -129,7 +112,7 @@ class Node(object):
         return self.parent.children[self.siblingIndex + 1]
 
     @property
-    def lastSibling(self) -> Optional['Element']:
+    def lastSibling(self: 'Element') -> Optional['Element']:
 
         if not self.parent or (sibling := self.parent.lastChild) is self:
             return None
@@ -137,9 +120,9 @@ class Node(object):
         return sibling
 
     @property
-    def firstChild(self) -> Optional['Element']:
+    def firstChild(self: 'Element') -> Optional['Element']:
         return self.children[0] if self.children else None
 
     @property
-    def lastChild(self) -> Optional['Element']:
+    def lastChild(self: 'Element') -> Optional['Element']:
         return self.children[-1] if self.children else None
